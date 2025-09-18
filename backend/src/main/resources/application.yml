@@ -1,0 +1,21 @@
+server:
+  servlet:
+    context-path: /
+  port: 8080
+spring:
+  jackson:
+    default-property-inclusion: non_null
+  application:
+    name: BankProcessor
+  datasource:
+    url: jdbc:h2:mem:test
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+#    url: jdbc:mysql://localhost:3306/pmanagerdb
+#   driverClassName: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password: admin
+  h2:
+    console:
+      enabled: true
