@@ -2,8 +2,6 @@ package com.techne.bankprocessor.entity;
 
 import java.time.LocalDateTime;
 
-import org.springframework.scheduling.support.CronExpression;
-
 import com.techne.bankprocessor.model.StatusJob;
 
 import jakarta.persistence.Column;
@@ -34,7 +32,7 @@ public class Job {
 	private String nome;
 
 	@Column(name = "cronExpression", nullable = false, length = 50)
-	private CronExpression cronExpression;
+	private String cronExpression;
 
 	@Column(name = "status", nullable = false)
 	private StatusJob status;
