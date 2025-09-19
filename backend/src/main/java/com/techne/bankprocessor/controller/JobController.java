@@ -16,64 +16,53 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techne.bankprocessor.dto.CreateJobDTO;
 import com.techne.bankprocessor.dto.JobDTO;
-import com.techne.bankprocessor.entity.Job;
-import com.techne.bankprocessor.mapper.JobMapper;
-import com.techne.bankprocessor.model.StatusJob;
-import com.techne.bankprocessor.repository.JobRepository;
+import com.techne.bankprocessor.service.JobService;
 
 @RestController
 @RequestMapping("/api/jobs")
 public class JobController {
 
     @Autowired
-    private JobRepository jobRepository;
-
-    @Autowired
-    private JobMapper jobMapper;
+    private JobService jobService;
 
     @PostMapping
     public ResponseEntity<JobDTO> createJob(@RequestBody CreateJobDTO createJobDTO) {
-        Job job = jobMapper.toEntity(createJobDTO);
-        job.setStatus(StatusJob.AGENDADO);
-        Job savedJob = jobRepository.save(job);
-        JobDTO jobDTO = jobMapper.toDTO(savedJob);
+        JobDTO jobDTO = jobService.createJob(createJobDTO);
         return new ResponseEntity<>(jobDTO, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<JobDTO>> getAllJobs() {
-        List<Job> jobs = jobRepository.findAll();
-        List<JobDTO> jobDTOs = jobs.stream()
-                .map(jobMapper::toDTO)
-                .toList();
+        List<JobDTO> jobDTOs = jobService.getAllJobs();
         return ResponseEntity.ok(jobDTOs);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<JobDTO> getJobById(@PathVariable Long id) {
-        return jobRepository.findById(id)
-                .map(job -> ResponseEntity.ok(jobMapper.toDTO(job)))
-                .orElse(ResponseEntity.notFound().build());
+        JobDTO jobDTO = jobService.getJobById(id);
+        if (jobDTO != null) {
+            return ResponseEntity.ok(jobDTO);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<JobDTO> updateJob(@PathVariable Long id, @RequestBody CreateJobDTO createJobDTO) {
-        return jobRepository.findById(id)
-                .map(existingJob -> {
-                    existingJob.setNome(createJobDTO.getNome());
-                    existingJob.setCronExpression(createJobDTO.getCronExpression());
-                    Job updatedJob = jobRepository.save(existingJob);
-                    return ResponseEntity.ok(jobMapper.toDTO(updatedJob));
-                })
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            JobDTO updatedJob = jobService.updateJob(id, createJobDTO);
+            return ResponseEntity.ok(updatedJob);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteJob(@PathVariable Long id) {
-        if (jobRepository.existsById(id)) {
-            jobRepository.deleteById(id);
+        try {
+            jobService.deleteJob(id);
             return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 }

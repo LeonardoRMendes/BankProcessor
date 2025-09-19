@@ -6,7 +6,6 @@ import com.techne.bankprocessor.model.StatusJob;
 
 import lombok.Data;
 
-@SuppressWarnings("unused")
 @Data
 public class JobDTO {
     private Long id;
