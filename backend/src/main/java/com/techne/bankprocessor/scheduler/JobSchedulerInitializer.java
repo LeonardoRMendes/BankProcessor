@@ -19,7 +19,7 @@ public class JobSchedulerInitializer implements CommandLineRunner {
     private JobRepository jobRepository;
     
     @Autowired
-    private QuartzSchedulerService quartzSchedulerService;
+    private SchedulerService schedulerService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -29,7 +29,7 @@ public class JobSchedulerInitializer implements CommandLineRunner {
         
         for (Job job : existingJobs) {
             try {
-                quartzSchedulerService.scheduleJob(job.getId(), job.getNome(), job.getCronExpression());
+                schedulerService.scheduleJob(job.getId(), job.getNome(), job.getCronExpression());
                 log.info("Scheduled existing job: {} (ID: {})", job.getNome(), job.getId());
             } catch (Exception e) {
                 log.error("Failed to schedule job: {} (ID: {}). Error: {}", job.getNome(), job.getId(), e.getMessage());

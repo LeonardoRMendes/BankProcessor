@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techne.bankprocessor.dto.CreateJobDTO;
 import com.techne.bankprocessor.dto.JobDTO;
-import com.techne.bankprocessor.scheduler.QuartzSchedulerService;
+import com.techne.bankprocessor.scheduler.SchedulerService;
 import com.techne.bankprocessor.service.JobService;
 
 @RestController
@@ -27,7 +27,7 @@ public class JobController {
     private JobService jobService;
     
     @Autowired 
-    private QuartzSchedulerService quartzSchedulerService;
+    private SchedulerService schedulerService;
 
     @PostMapping
     public ResponseEntity<JobDTO> createJob(@RequestBody CreateJobDTO createJobDTO) {

@@ -11,7 +11,7 @@ import com.techne.bankprocessor.dto.JobDTO;
 import com.techne.bankprocessor.entity.Job;
 import com.techne.bankprocessor.mapper.JobMapper;
 import com.techne.bankprocessor.repository.JobRepository;
-import com.techne.bankprocessor.scheduler.QuartzSchedulerService;
+import com.techne.bankprocessor.scheduler.SchedulerService;
 import com.techne.bankprocessor.model.StatusJob;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -24,7 +24,7 @@ public class JobService {
     @Autowired
     private JobMapper jobMapper;
     @Autowired
-    private QuartzSchedulerService quartzSchedulerService;
+    private SchedulerService schedulerService;
 
     @Transactional
     public JobDTO createJob(CreateJobDTO dto) {
@@ -32,7 +32,7 @@ public class JobService {
         job.setStatus(StatusJob.AGENDADO);
         job = jobRepository.save(job);
         
-        quartzSchedulerService.scheduleJob(job.getId(), job.getNome(), job.getCronExpression());        
+        schedulerService.scheduleJob(job.getId(), job.getNome(), job.getCronExpression());        
         
         return jobMapper.toDTO(job);
     }
@@ -60,7 +60,7 @@ public class JobService {
             
             
             if (!oldCronExpression.equals(dto.getCronExpression())) {
-                quartzSchedulerService.rescheduleJob(job.getId(), job.getNome(), job.getCronExpression());
+                schedulerService.rescheduleJob(job.getId(), job.getNome(), job.getCronExpression());
             }
             
             return jobMapper.toDTO(job);
@@ -77,7 +77,7 @@ public class JobService {
 
     public JobDTO updateNextExecution(Long id) {
 		return jobRepository.findById(id).map(job -> {
-			java.time.LocalDateTime nextExecution = quartzSchedulerService.getNextExecutionTime(job.getId());
+			java.time.LocalDateTime nextExecution = schedulerService.getNextExecutionTime(job.getId());
 			job.setProximaExecucao(nextExecution);
 			job = jobRepository.save(job);
 			return jobMapper.toDTO(job);
@@ -85,7 +85,7 @@ public class JobService {
 	}
 
     public void deleteJob(Long id) {
-        quartzSchedulerService.unscheduleJob(id);
+        schedulerService.unscheduleJob(id);
         jobRepository.deleteById(id);
     }
 }
