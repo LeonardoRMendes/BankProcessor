@@ -65,4 +65,22 @@ public class QuartzSchedulerService {
         unscheduleJob(jobId);
         scheduleJob(jobId, jobName, cronExpression);
     }
+    
+    public java.time.LocalDateTime getNextExecutionTime(Long jobId) {
+		try {
+			TriggerKey triggerKey = new TriggerKey("trigger-" + jobId, "bank-processor-triggers");
+			Trigger trigger = scheduler.getTrigger(triggerKey);
+			if (trigger != null) {
+				java.util.Date nextFireTime = trigger.getNextFireTime();
+				if (nextFireTime != null) {
+					return java.time.LocalDateTime.ofInstant(nextFireTime.toInstant(), java.time.ZoneId.systemDefault());
+				}
+			}
+			return null;
+		} catch (SchedulerException e) {
+			log.error("Error getting next execution time for job ID {}: {}", jobId, e.getMessage());
+			throw new RuntimeException("Failed to get next execution time", e);
+		}
+	}
+    
 }

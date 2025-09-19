@@ -58,6 +58,7 @@ public class JobService {
             job.setCronExpression(dto.getCronExpression());
             job = jobRepository.save(job);
             
+            
             if (!oldCronExpression.equals(dto.getCronExpression())) {
                 quartzSchedulerService.rescheduleJob(job.getId(), job.getNome(), job.getCronExpression());
             }
@@ -65,6 +66,23 @@ public class JobService {
             return jobMapper.toDTO(job);
         }).orElseThrow(() -> new EntityNotFoundException("Job não encontrado com id: " + id));
     }
+    
+    public JobDTO updateLastExecution(Long id, java.time.LocalDateTime lastExecution) {
+		return jobRepository.findById(id).map(job -> {
+			job.setUltimaExecucao(lastExecution);
+			job = jobRepository.save(job);
+			return jobMapper.toDTO(job);
+		}).orElseThrow(() -> new EntityNotFoundException("Job não encontrado com id: " + id));
+	}
+
+    public JobDTO updateNextExecution(Long id) {
+		return jobRepository.findById(id).map(job -> {
+			java.time.LocalDateTime nextExecution = quartzSchedulerService.getNextExecutionTime(job.getId());
+			job.setProximaExecucao(nextExecution);
+			job = jobRepository.save(job);
+			return jobMapper.toDTO(job);
+		}).orElseThrow(() -> new EntityNotFoundException("Job não encontrado com id: " + id));
+	}
 
     public void deleteJob(Long id) {
         quartzSchedulerService.unscheduleJob(id);

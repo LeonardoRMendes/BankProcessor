@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techne.bankprocessor.dto.CreateJobDTO;
 import com.techne.bankprocessor.dto.JobDTO;
+import com.techne.bankprocessor.scheduler.QuartzSchedulerService;
 import com.techne.bankprocessor.service.JobService;
 
 @RestController
@@ -24,6 +25,9 @@ public class JobController {
 
     @Autowired
     private JobService jobService;
+    
+    @Autowired 
+    private QuartzSchedulerService quartzSchedulerService;
 
     @PostMapping
     public ResponseEntity<JobDTO> createJob(@RequestBody CreateJobDTO createJobDTO) {
@@ -49,8 +53,9 @@ public class JobController {
     @PutMapping("/{id}")
     public ResponseEntity<JobDTO> updateJob(@PathVariable Long id, @RequestBody CreateJobDTO createJobDTO) {
         try {
-            JobDTO updatedJob = jobService.updateJob(id, createJobDTO);
-            return ResponseEntity.ok(updatedJob);
+        	JobDTO updatedJob = jobService.updateJob(id, createJobDTO);            
+        	updatedJob = jobService.updateNextExecution(updatedJob.getId());
+        	return ResponseEntity.ok(updatedJob);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
