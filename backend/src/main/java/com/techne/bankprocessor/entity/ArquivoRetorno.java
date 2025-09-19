@@ -37,7 +37,7 @@ public class ArquivoRetorno {
     @Column(name = "nomeArquivo", nullable = false, length = 50)
     private String nomeArquivo;
     
-    @Column(name = "conteudo", nullable = false)
+    @Column(name = "conteudo", nullable = false, columnDefinition = "TEXT")
     private String conteudo;
     
     @Column(name = "dataProcessamento")

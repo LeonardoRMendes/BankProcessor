@@ -4,5 +4,6 @@ public enum StatusJob {
     AGENDADO,
     PROCESSANDO,
     CONCLUIDO,
-    FALHA
+    FALHA,
+    DESATIVADO
 }

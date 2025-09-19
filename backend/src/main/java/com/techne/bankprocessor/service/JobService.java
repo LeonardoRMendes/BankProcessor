@@ -3,6 +3,7 @@ package com.techne.bankprocessor.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,9 @@ import com.techne.bankprocessor.dto.CreateJobDTO;
 import com.techne.bankprocessor.dto.JobDTO;
 import com.techne.bankprocessor.entity.Job;
 import com.techne.bankprocessor.mapper.JobMapper;
+import com.techne.bankprocessor.model.StatusJob;
 import com.techne.bankprocessor.repository.JobRepository;
 import com.techne.bankprocessor.scheduler.SchedulerService;
-import com.techne.bankprocessor.model.StatusJob;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -25,14 +26,18 @@ public class JobService {
     private JobMapper jobMapper;
     @Autowired
     private SchedulerService schedulerService;
+    @Autowired
+    private ArquivoRetornoService arquivoRetornoService;
 
     @Transactional
     public JobDTO createJob(CreateJobDTO dto) {
-        Job job = jobMapper.toEntity(dto);
+    	validateCronExpression(dto.getCronExpression());
+    	Job job = jobMapper.toEntity(dto);
         job.setStatus(StatusJob.AGENDADO);
         job = jobRepository.save(job);
-        
-        schedulerService.scheduleJob(job.getId(), job.getNome(), job.getCronExpression());        
+        schedulerService.scheduleJob(job.getId(), job.getNome(), job.getCronExpression());
+        updateNextExecution(job.getId());
+        job = jobRepository.findById(job.getId()).orElseThrow();
         
         return jobMapper.toDTO(job);
     }
@@ -52,19 +57,25 @@ public class JobService {
     @Transactional
     public JobDTO updateJob(Long id, CreateJobDTO dto) {
         return jobRepository.findById(id).map(job -> {
-            String oldCronExpression = job.getCronExpression();
-            
-            job.setNome(dto.getNome());
-            job.setCronExpression(dto.getCronExpression());
-            job = jobRepository.save(job);
-            
-            
-            if (!oldCronExpression.equals(dto.getCronExpression())) {
-                schedulerService.rescheduleJob(job.getId(), job.getNome(), job.getCronExpression());
+        	validateCronExpression(dto.getCronExpression());
+        	if(job.getStatus() == StatusJob.DESATIVADO) {
+            	throw new IllegalArgumentException("Job está desativado e não pode ser alterado.");
             }
-            
-            return jobMapper.toDTO(job);
-        }).orElseThrow(() -> new EntityNotFoundException("Job não encontrado com id: " + id));
+            else {
+	            String oldCronExpression = job.getCronExpression();
+	            
+	            job.setNome(dto.getNome());
+	            job.setCronExpression(dto.getCronExpression());
+	            job = jobRepository.save(job);
+	            
+	            
+	            if (!oldCronExpression.equals(dto.getCronExpression())) {
+	                schedulerService.rescheduleJob(job.getId(), job.getNome(), job.getCronExpression());
+	            }
+	            
+	            return jobMapper.toDTO(job);
+			}
+        }).orElseThrow(() -> new EntityNotFoundException("O Job com o ID especificado não foi encontrado."));
     }
     
     public JobDTO updateLastExecution(Long id, java.time.LocalDateTime lastExecution) {
@@ -72,7 +83,7 @@ public class JobService {
 			job.setUltimaExecucao(lastExecution);
 			job = jobRepository.save(job);
 			return jobMapper.toDTO(job);
-		}).orElseThrow(() -> new EntityNotFoundException("Job não encontrado com id: " + id));
+		}).orElseThrow(() -> new EntityNotFoundException("O Job com o ID especificado não foi encontrado."));
 	}
 
     public JobDTO updateNextExecution(Long id) {
@@ -81,11 +92,46 @@ public class JobService {
 			job.setProximaExecucao(nextExecution);
 			job = jobRepository.save(job);
 			return jobMapper.toDTO(job);
-		}).orElseThrow(() -> new EntityNotFoundException("Job não encontrado com id: " + id));
+		}).orElseThrow(() -> new EntityNotFoundException("O Job com o ID especificado não foi encontrado."));
 	}
 
     public void deleteJob(Long id) {
-        schedulerService.unscheduleJob(id);
-        jobRepository.deleteById(id);
+		Job job = jobRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("O Job com o ID especificado não foi encontrado."));
+
+    	
+    	schedulerService.unscheduleJob(id);
+        boolean hardDelete = arquivoRetornoService.findByJobId(id).isEmpty();
+        //SoftDelete
+        if (!hardDelete) {
+			
+			if(job.getStatus() == StatusJob.DESATIVADO) {
+				throw new IllegalArgumentException("Job já está desativado.");
+			}
+			else{job.setStatus(StatusJob.DESATIVADO);
+			job.setProximaExecucao(null);
+			jobRepository.save(job);
+			}
+			return;
+		}
+        //HardDelete
+        else {
+			jobRepository.deleteById(id);
+		}
     }
+
+    @Transactional
+    public void updateJobStatus(Long id, StatusJob status) {
+        jobRepository.findById(id).ifPresent(job -> {
+            job.setStatus(status);
+            jobRepository.save(job);
+        });
+    }
+    
+    private void validateCronExpression(String cronExpression) {
+        if (!CronExpression.isValidExpression(cronExpression)) {
+            throw new IllegalArgumentException("Expressão Cron inválida.");
+        }
+    }
+    
 }
