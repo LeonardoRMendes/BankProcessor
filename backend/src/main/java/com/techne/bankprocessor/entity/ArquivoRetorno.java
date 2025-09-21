@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,13 +39,14 @@ public class ArquivoRetorno {
     @Column(name = "nomeArquivo", nullable = false, length = 50)
     private String nomeArquivo;
     
-    @Column(name = "conteudo", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "conteudo", nullable = false, columnDefinition = "NVARCHAR(MAX)")
     private String conteudo;
     
     @Column(name = "dataProcessamento")
     private LocalDateTime dataProcessamento;
 
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private StatusArquivo status;
 
 }

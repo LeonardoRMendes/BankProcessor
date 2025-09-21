@@ -1,0 +1,12 @@
+#TEMPORARY, REMOVE LATER
+README.md
+
+/target/
+
+.classpath
+.project
+.settings/
+
+*.log
+
+.env

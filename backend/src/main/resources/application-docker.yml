@@ -2,28 +2,34 @@ server:
   servlet:
     context-path: /
   port: 8080
+
 spring:
   jackson:
     default-property-inclusion: non_null
   application:
     name: BankProcessor
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=bankprocessor;trustServerCertificate=true
+    url: jdbc:sqlserver://sqlserver:1433;databaseName=bankprocessor;trustServerCertificate=true
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: sa
     password: BankProcessor123!
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
   jpa:
     hibernate:
       ddl-auto: validate
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
     properties:
       hibernate:
         dialect: org.hibernate.dialect.SQLServerDialect
         format_sql: true
-        globally_quoted_identifiers: true
     show-sql: false
   sql:
     init:
       mode: never
+
+logging:
+  level:
+    com.techne.bankprocessor: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

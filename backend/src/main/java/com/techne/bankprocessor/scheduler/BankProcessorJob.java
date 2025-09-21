@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -99,7 +98,7 @@ public class BankProcessorJob implements Job {
             Path pendingDir = Paths.get(PENDENTES);
             Files.createDirectories(pendingDir);
             Path pendingFile = pendingDir.resolve(newFileName);
-            Files.copy(sourceFile, pendingFile);
+            Files.move(sourceFile, pendingFile);
             
             arquivoRetornoService.createArquivoRetorno(job, newFileName, content);
             
@@ -212,8 +211,13 @@ public class BankProcessorJob implements Job {
         try {
             headerLine = headerLine.trim();
             
-            if (headerLine.length() < 32) {
+            if (headerLine.length() < 34) {
                 log.error("Header line too short: {} (length: {})", headerLine, headerLine.length());
+                return false;
+            }
+            
+            if (headerLine.length() > 34) {
+                log.error("Header line too long: {} (length: {})", headerLine, headerLine.length());
                 return false;
             }
             
@@ -235,8 +239,13 @@ public class BankProcessorJob implements Job {
     
     private boolean processTransaction(String transactionLine, int lineNumber) {
         try {
-            if (transactionLine.length() < 52) {
+            if (transactionLine.length() < 53) {
                 log.error("Transaction line {} too short: {}", lineNumber, transactionLine);
+                return false;
+            }
+            
+            if (transactionLine.length() > 53) {
+                log.error("Transaction line {} too long: {}", lineNumber, transactionLine);
                 return false;
             }
             

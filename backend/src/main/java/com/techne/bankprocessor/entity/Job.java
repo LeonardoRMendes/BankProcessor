@@ -6,6 +6,8 @@ import com.techne.bankprocessor.model.StatusJob;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +18,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "job")
+@Table(name = "JOB")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,6 +37,7 @@ public class Job {
 	private String cronExpression;
 
 	@Column(name = "status", nullable = false)
+	@Enumerated(EnumType.ORDINAL)
 	private StatusJob status;
 
 	@Column(name = "ultimaExecucao", nullable = true)

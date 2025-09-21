@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import com.techne.bankprocessor.entity.Job;
+import com.techne.bankprocessor.model.StatusJob;
 import com.techne.bankprocessor.repository.JobRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class JobSchedulerInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("Initializing job scheduler...");
         
-        List<Job> existingJobs = jobRepository.findAll();
+        List<Job> existingJobs = jobRepository.findByStatusNot(StatusJob.DESATIVADO);
         
         for (Job job : existingJobs) {
             try {
