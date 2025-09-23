@@ -7,12 +7,11 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: var(--color-primary);
   color: #333;
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
   color: white;
   border: none;
   padding: 10px 15px;
@@ -26,7 +25,6 @@ body {
 }
 
 .btn-info {
-  background-color: var(--color-info);
   color: white;
   border: none;
   padding: 10px 15px;
@@ -35,7 +33,6 @@ body {
 }
 
 .btn-danger {
-  background-color: #dc3545;
   color: white;
   border: none;
   padding: 10px 15px;

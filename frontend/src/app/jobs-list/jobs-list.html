@@ -33,3 +33,15 @@
     </table>
   </div>
 </div>
+
+<!-- Modal for Job Form -->
+<app-modal 
+  [isOpen]="isModalOpen" 
+  [title]="modalTitle" 
+  (closeModal)="closeModal()">
+  <app-job-form 
+    [jobToEdit]="selectedJob"
+    (jobSaved)="onJobSaved()"
+    (formCanceled)="onFormCanceled()">
+  </app-job-form>
+</app-modal>

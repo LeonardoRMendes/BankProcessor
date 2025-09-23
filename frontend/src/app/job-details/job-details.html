@@ -16,7 +16,7 @@
     <div *ngIf="files.length > 0">
       <ul class="file-list">
         <li *ngFor="let file of files">
-          Arquivo ID: {{ file.id }} - Nome: {{ file.nome }} - Tamanho: {{ file.tamanho }}
+          {{ file.nomeArquivo }} | {{ file.dataProcessamento | date:'dd/MM/yyyy HH:mm:ss' }} | {{ file.status }}
         </li>
       </ul>
     </div>
