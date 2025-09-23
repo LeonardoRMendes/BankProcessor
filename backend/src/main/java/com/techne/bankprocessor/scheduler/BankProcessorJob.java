@@ -209,7 +209,7 @@ public class BankProcessorJob implements Job {
     
     private boolean processHeader(String headerLine) {
         try {
-            headerLine = headerLine.trim();
+            headerLine = headerLine.trim();       
             
             if (headerLine.length() < 34) {
                 log.error("Header line too short: {} (length: {})", headerLine, headerLine.length());
@@ -224,7 +224,7 @@ public class BankProcessorJob implements Job {
             String dataGeracao = headerLine.substring(0, 8);
             String horaGeracao = headerLine.substring(8, 14);
             String empresa = headerLine.substring(14, 23).trim();
-            String numeroLote = headerLine.substring(23, Math.min(headerLine.length(), 34));
+            String numeroLote = headerLine.substring(24, Math.min(headerLine.length(), 33));
             
             log.info("Header - Data: {}, Hora: {}, Empresa: {}, Lote: {}", 
                     dataGeracao, horaGeracao, empresa, numeroLote);
@@ -238,7 +238,7 @@ public class BankProcessorJob implements Job {
     }
     
     private boolean processTransaction(String transactionLine, int lineNumber) {
-        try {
+        try {        	
             if (transactionLine.length() < 53) {
                 log.error("Transaction line {} too short: {}", lineNumber, transactionLine);
                 return false;
@@ -253,7 +253,7 @@ public class BankProcessorJob implements Job {
             String valorStr = transactionLine.substring(2, 11);
             String dataTransacao = transactionLine.substring(12, 20);
             String descricao = transactionLine.substring(20, 49).trim();
-            String codigoOcorrencia = transactionLine.substring(50, 53);
+            String codigoOcorrencia = transactionLine.substring(50);
             
             double valor = Double.parseDouble(valorStr) / 100.0;
             String valorFormatado = String.format("R$ %.2f", valor);

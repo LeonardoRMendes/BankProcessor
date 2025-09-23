@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2>Agendamentos</h2>
+      <button class="btn-primary" (click)="navigateToNewJob()">Novo Agendamento</button>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CRON</th>
+          <th>Status</th>
+          <th>Última Execução</th>
+          <th>Próxima Execução</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let job of jobs">
+          <td>{{ job.nome }}</td>
+          <td>{{ job.cronExpression }}</td>
+          <td>{{ job.status }}</td>
+          <td>{{ job.ultimaExecucao | date:'short' }}</td>
+          <td>{{ job.proximaExecucao | date:'short' }}</td>
+          <td>
+            <button class="btn-info" (click)="viewDetails(job.id)">Detalhes</button>
+            <button class="btn-primary" (click)="editJob(job.id)">Editar</button>
+            <button class="btn-danger" (click)="deleteJob(job.id)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2>Arquivos do Agendamento</h2>
+      <button class="btn-info" (click)="goBack()">Voltar</button>
+    </div>
+
+    <div *ngIf="jobDetails">
+      <h3>{{ jobDetails.nome }}</h3>
+      <p>ID: {{ jobDetails.id }}</p>
+      <p>Expressão CRON: {{ jobDetails.cronExpression }}</p>
+    </div>
+
+    <hr>
+
+    <div *ngIf="files.length > 0">
+      <ul class="file-list">
+        <li *ngFor="let file of files">
+          Arquivo ID: {{ file.id }} - Nome: {{ file.nome }} - Tamanho: {{ file.tamanho }}
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="files.length === 0 && !errorMessage">
+      <p>Nenhum arquivo de retorno encontrado para este agendamento.</p>
+    </div>
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>
