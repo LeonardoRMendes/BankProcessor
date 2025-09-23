@@ -46,7 +46,7 @@ export class JobsListComponent implements OnInit {
     if (confirm('Tem certeza que deseja excluir este agendamento?')) {
       this.jobService.deleteJob(id).subscribe(
         () => {
-          this.getJobs(); // Atualiza a lista após a exclusão
+          this.getJobs();
         },
         (error) => {
           console.error('Erro ao excluir agendamento:', error);

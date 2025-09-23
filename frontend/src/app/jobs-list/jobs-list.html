@@ -21,8 +21,8 @@
           <td>{{ job.nome }}</td>
           <td>{{ job.cronExpression }}</td>
           <td>{{ job.status }}</td>
-          <td>{{ job.ultimaExecucao | date:'short' }}</td>
-          <td>{{ job.proximaExecucao | date:'short' }}</td>
+          <td>{{ job.ultimaExecucao | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+          <td>{{ job.proximaExecucao | date:'dd/MM/yyyy HH:mm:ss' }}</td>
           <td>
             <button class="btn-info" (click)="viewDetails(job.id)">Detalhes</button>
             <button class="btn-primary" (click)="editJob(job.id)">Editar</button>
