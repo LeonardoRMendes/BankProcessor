@@ -53,7 +53,7 @@ export class JobsListComponent implements OnInit {
 
   onJobSaved(): void {
     this.isModalOpen = false;
-    this.getJobs(); // Refresh the list
+    this.getJobs();
   }
 
   onFormCanceled(): void {
