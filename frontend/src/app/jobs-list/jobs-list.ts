@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { JobService } from '../job';
+import { JobService } from '../job.service';
 import { ModalComponent } from '../modal/modal.component';
 import { JobFormComponent } from '../job-form/job-form';
 
@@ -26,10 +26,10 @@ export class JobsListComponent implements OnInit {
 
   getJobs(): void {
     this.jobService.getJobs().subscribe(
-      (data) => {
+      (data: any[]) => {
         this.jobs = data;
       },
-      (error) => {
+      (error: any) => {
         console.error('Erro ao buscar agendamentos:', error);
       }
     );
@@ -39,6 +39,10 @@ export class JobsListComponent implements OnInit {
     this.selectedJob = null;
     this.modalTitle = 'Novo Agendamento';
     this.isModalOpen = true;
+  }
+
+  navigateToArquivos(): void {
+    this.router.navigate(['/arquivos-retorno']);
   }
 
   editJob(id: number): void {
@@ -70,7 +74,7 @@ export class JobsListComponent implements OnInit {
         () => {
           this.getJobs();
         },
-        (error) => {
+        (error: any) => {
           console.error('Erro ao excluir agendamento:', error);
         }
       );

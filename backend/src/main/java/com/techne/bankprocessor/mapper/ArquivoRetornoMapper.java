@@ -18,6 +18,8 @@ public class ArquivoRetornoMapper {
     public ArquivoRetornoDTO toDTO(ArquivoRetorno entity) {
         ArquivoRetornoDTO dto = new ArquivoRetornoDTO();
         dto.setId(entity.getId());
+        dto.setJobId(entity.getJob().getId());
+        dto.setJobNome(entity.getJob().getNome());
         dto.setNomeArquivo(entity.getNomeArquivo());
         dto.setConteudo(entity.getConteudo());
         dto.setDataProcessamento(entity.getDataProcessamento());

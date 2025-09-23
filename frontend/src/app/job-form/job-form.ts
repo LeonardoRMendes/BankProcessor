@@ -1,7 +1,8 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { JobService } from '../job';
+import { JobService } from '../job.service';
 
 @Component({
   selector: 'app-job-form',
@@ -79,7 +80,7 @@ export class JobFormComponent implements OnInit, OnChanges {
         () => {
           this.jobSaved.emit();
         },
-        (error) => {
+        (error: any) => {
           this.errorMessage = 'Erro ao atualizar agendamento.';
           console.error('Erro de atualização:', error);
         }
@@ -89,7 +90,7 @@ export class JobFormComponent implements OnInit, OnChanges {
         () => {
           this.jobSaved.emit();
         },
-        (error) => {
+        (error: any) => {
           this.errorMessage = 'Erro ao criar agendamento.';
           console.error('Erro de criação:', error);
         }

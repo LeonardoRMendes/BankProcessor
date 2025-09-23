@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { JobService } from '../job';
+import { JobService } from '../job.service';
 
 @Component({
   selector: 'app-job-details',
@@ -35,10 +35,10 @@ export class JobDetailsComponent implements OnInit {
 
   getJobDetails(id: number): void {
     this.jobService.getJobById(id).subscribe(
-      (data) => {
+      (data: any) => {
         this.jobDetails = data;
       },
-      (error) => {
+      (error: any) => {
         this.errorMessage = 'Agendamento não encontrado.';
       }
     );
@@ -46,10 +46,10 @@ export class JobDetailsComponent implements OnInit {
 
   getJobFiles(id: number): void {
     this.jobService.getJobFiles(id).subscribe(
-      (data) => {
+      (data: any[]) => {
         this.files = data;
       },
-      (error) => {
+      (error: any) => {
         this.errorMessage = 'Erro ao carregar arquivos do agendamento.';
       }
     );
