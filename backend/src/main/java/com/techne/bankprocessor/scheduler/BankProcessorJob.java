@@ -86,8 +86,7 @@ public class BankProcessorJob implements Job {
             throw new RuntimeException("Failed to process source files", e);
         }
     }
-    
-    //Process files on source folder and create pending files
+
     private void processSourceFile(com.techne.bankprocessor.entity.Job job, Path sourceFile) {
         try {
             String content = Files.readString(sourceFile);
@@ -108,8 +107,7 @@ public class BankProcessorJob implements Job {
             log.error("Error processing source file {}: {}", sourceFile, e.getMessage(), e);
         }
     }
-    
-    //Calls processFile for each pending file
+
     private void processPendingFiles() throws InterruptedException {
         log.info("Processing pending files...");
         
@@ -119,14 +117,13 @@ public class BankProcessorJob implements Job {
             processFile(arquivo);
         }
         
-        log.info("Finished processing {} pending files", pendingFiles.size());
+        log.info("Finished processing pending file");
     }
     
     private void processFile(ArquivoRetorno arquivo) throws InterruptedException {
         try {
             log.info("Processing file: {}", arquivo.getNomeArquivo());
-            
-            // Read file content from pending directory
+
             Path pendingFile = Paths.get(PENDENTES, arquivo.getNomeArquivo());
             
             if (!Files.exists(pendingFile)) {
@@ -138,8 +135,7 @@ public class BankProcessorJob implements Job {
             boolean success = processFileContent(content);
             
             Thread.sleep(10000); 
-            
-            //Redirects file based on processing result
+
             if (success) {
                 Path processedDir = Paths.get(PROCESSADOS);
                 Files.createDirectories(processedDir);
@@ -180,7 +176,6 @@ public class BankProcessorJob implements Job {
     }
     
     
-    // Calls processHeader and processTransaction
     private boolean processFileContent(String content) {
         try {
             String[] lines = content.split("\\r?\\n");
@@ -248,7 +243,7 @@ public class BankProcessorJob implements Job {
                 log.error("Transaction line {} too long: {}", lineNumber, transactionLine);
                 return false;
             }
-            
+         
             String tipoTransacao = transactionLine.substring(0, 1);
             String valorStr = transactionLine.substring(2, 11);
             String dataTransacao = transactionLine.substring(12, 20);
