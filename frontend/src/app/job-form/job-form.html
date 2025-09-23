@@ -1,7 +1,7 @@
 <form (ngSubmit)="saveJob()">
   <div class="form-group">
     <label for="nome">Nome</label>
-    <input type="text" id="nome" [(ngModel)]="job.nome" name="nome" required>
+    <input type="text" id="nome" [(ngModel)]="job.nome" maxlength=255 name="nome" required>
     <div *ngIf="!job.nome && formSubmitted" class="error-message">
       Nome é obrigatório.
     </div>

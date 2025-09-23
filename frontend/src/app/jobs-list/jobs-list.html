@@ -22,7 +22,7 @@
 			</thead>
 			<tbody>
 				<tr *ngFor="let job of jobs">
-					<td>{{ job.nome }}</td>
+					<td>{{ job.nome.length > 15 ? (job.nome | slice:0:12) + '...' : job.nome }}</td>					
 					<td>{{ job.cronExpression }}</td>
 					<td>{{ job.status }}</td>
 					<td>{{ job.ultimaExecucao | date:'dd/MM/yyyy HH:mm:ss' }}</td>
