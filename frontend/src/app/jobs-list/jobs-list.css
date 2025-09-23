@@ -1,19 +1,19 @@
 .btn-primary {
-  background-color: #007bff;
+  background-color: var(--color-info);
   color: white;
   border: none;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   margin-right: 5px;
 }
 
 .btn-info {
-  background-color: #17a2b8;
+  background-color: rgb(12, 49, 140);
   color: white;
   border: none;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   margin-right: 5px;
 }
@@ -23,7 +23,7 @@
   color: white;
   border: none;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   margin-right: 5px;
 }

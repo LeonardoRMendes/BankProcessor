@@ -2,7 +2,7 @@
   --color-primary: #DBA50C;
   --color-secondary: #E9B439;
   --color-accent: #F9D316;
-  --color-info: #417EC0;
+  --color-info: rgb(4, 17, 107);
 }
 
 body {

@@ -40,7 +40,7 @@
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: var(--color-info);
   color: white;
   border: none;
   padding: 8px 16px;
@@ -54,7 +54,7 @@
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: rgb(237, 51, 59);
   color: white;
   border: none;
   padding: 8px 16px;
