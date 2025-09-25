@@ -219,7 +219,7 @@ public class BankProcessorJob implements Job {
             String dataGeracao = headerLine.substring(0, 8);
             String horaGeracao = headerLine.substring(8, 14);
             String empresa = headerLine.substring(14, 23).trim();
-            String numeroLote = headerLine.substring(24, Math.min(headerLine.length(), 33));
+            String numeroLote = headerLine.substring(24);
             
             log.info("Header - Data: {}, Hora: {}, Empresa: {}, Lote: {}", 
                     dataGeracao, horaGeracao, empresa, numeroLote);
@@ -245,7 +245,7 @@ public class BankProcessorJob implements Job {
             }
          
             String tipoTransacao = transactionLine.substring(0, 1);
-            String valorStr = transactionLine.substring(2, 11);
+            String valorStr = transactionLine.substring(2, 12);
             String dataTransacao = transactionLine.substring(12, 20);
             String descricao = transactionLine.substring(20, 49).trim();
             String codigoOcorrencia = transactionLine.substring(50);
