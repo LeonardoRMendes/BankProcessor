@@ -56,7 +56,7 @@ export class JobFormComponent implements OnInit, OnChanges {
     const trimmed = cronExpression.trim();
     const fields = trimmed.split(/\s+/);
     
-    if (fields.length !== 5 && fields.length !== 6) {
+    if (fields.length !== 6) {
       return false;
     }
     
