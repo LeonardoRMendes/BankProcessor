@@ -175,7 +175,7 @@ You must update these static path variables to match your local environment.
 The job expects .txt files in the retornos_bancarios directory with a specific fixed-width format. Each file must contain a header line followed by one or more transaction lines.
 
 ### Header (34 characters) 
--	Position 1-8: Generation Date (YYYYMMDD)
+-	Position 1-8: Generation Date (DDMMYYYY)
 - Position 9-14: Generation Time (HHMMSS)
 -	Position 15-23: Company Name (10 characters, right-padded with spaces)
 -	Position 24-33: Batch Number (10 characters)
@@ -183,7 +183,7 @@ The job expects .txt files in the retornos_bancarios directory with a specific f
 ### Transaction
 - Position 1: Transaction Type (1 character)
 - Position 2-12: Value (11 digits, no decimal point, e.g., 0000123456 for 1234.56)
-- Position 13-20: Transaction Date (YYYYMMDD)
+- Position 13-20: Transaction Date (DDMMYYYY)
 - Position 21-50: Description (30 characters, right-padded with spaces)
 - Position 51-53: Occurrence Code (3 characters)
 
